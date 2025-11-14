@@ -1,0 +1,20 @@
+# ===========================
+# .gitignore Challenge API
+# ===========================
+
+bin/
+obj/
+.vscode/
+.vs/
+*.user
+*.userosscache
+*.suo
+*.log
+TestResults/
+*.aps
+*.cache
+*.dbmdl
+*.nupkg
+packages/
+_ReSharper*/
+*.DotSettings.user
