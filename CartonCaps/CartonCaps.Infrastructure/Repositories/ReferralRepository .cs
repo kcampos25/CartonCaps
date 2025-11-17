@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CartonCaps.Infrastructure.Repositories
 {
     /// <summary>
-    /// Repository responsible for managing and centralizing access to data from the application's referrals module.
+    /// Repository responsible for managing and centralizing access to data related to referred users.
     /// </summary>
     public class ReferralRepository : IReferralRepository
     {
@@ -18,7 +18,7 @@ namespace CartonCaps.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Function responsible for obtaining the people invited by a user (my referrals).
+        /// Function responsible for obtaining a list of users who have been referred by a user(my referrals).
         /// </summary>
         /// <param name="referrerUserId"></param>
         /// <returns>List of a user's referrals(name,status)</returns>
@@ -44,7 +44,7 @@ namespace CartonCaps.Infrastructure.Repositories
             var referral = new Referral
             {
                 Id = referralEntity.Id != Guid.Empty ? referralEntity.Id : Guid.NewGuid(),
-                InvitationCode = referralEntity.InvitationCode,
+                ReferralCode = referralEntity.ReferralCode,
                 InviteName = referralEntity.InviteName,
                 LinkGenerated = referralEntity.LinkGenerated,
                 Status = referralEntity.Status ?? "Pending",
@@ -53,7 +53,7 @@ namespace CartonCaps.Infrastructure.Repositories
             };
 
             await _context.Referrals.AddAsync(referral);
-           await  _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -62,10 +62,32 @@ namespace CartonCaps.Infrastructure.Repositories
         /// <param name="referrerUserId"></param>
         /// <param name="referralCode"></param>
         /// <returns>depending on whether the referral code exists or not (true/false)</returns>
-        public async Task<bool> ReferralCodeExistsAsync(Guid referrerUserId, string referralCode)
+        public async Task<bool> ReferralCodeExistsAsync(string referralCode)
         {
+            return await _context.Referrals.AnyAsync(r => r.ReferralCode == referralCode);
+        }
+
+        /// <summary>
+        /// Function to obtain referral records registered by a referral code.
+        /// </summary>
+        /// <param name="referralCode"></param>
+        /// <returns>referral record information</returns>
+        public async Task<ReferralEntity?> GetReferralByCode(string referralCode)
+        {
+            if (string.IsNullOrEmpty(referralCode)) return null;
             return await _context.Referrals
-                .AnyAsync(r => r.ReferrerUserId == referrerUserId && r.InvitationCode == referralCode);
+                        .Where(referral => referral.ReferralCode == referralCode)
+                        .Select(referral => new ReferralEntity
+                        {
+                            Id = referral.Id,
+                            LinkGenerated = referral.LinkGenerated,
+                            Status = referral.Status,
+                            InviteName = referral.InviteName,
+                            ReferralCode = referral.ReferralCode,
+                            CreatedAt = referral.CreatedAt,
+                            ReferrerUserId = referral.ReferrerUserId
+
+                        }).SingleOrDefaultAsync();
         }
     }
 }

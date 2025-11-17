@@ -9,6 +9,7 @@ namespace CartonCaps.Application.Mappings
         public CartonCapsProfile() {
 
             CreateMap<UserReferralEntity, UserReferralResponse>();
+            CreateMap<ReferralVisitHistoryEntity, ReferralVisitHistoryResponse>();
         }
     }
 }

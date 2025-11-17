@@ -69,7 +69,7 @@ namespace CartonCaps.Infrastructure.MockData
                     LinkGenerated="https://cartoncaps.link/abfilefa90p?referral_code=XY7G4D-01",
                     Status="Completed",
                     InviteName = "Keylin Rodriguez",
-                    InvitationCode = "XY7G4D-01"
+                    ReferralCode = "XY7G4D-01"
                 },
 
                  new Referral
@@ -79,7 +79,7 @@ namespace CartonCaps.Infrastructure.MockData
                     LinkGenerated="https://cartoncaps.link/abcfr60p?referral_code=XY7G4D-02",
                     Status="Completed",
                     InviteName = "Steven Murillo",
-                    InvitationCode = "XY7G4D-02"
+                    ReferralCode = "XY7G4D-02"
                 },
 
                    new Referral
@@ -88,7 +88,7 @@ namespace CartonCaps.Infrastructure.MockData
                     ReferrerUserId=gabrielId,
                     LinkGenerated="https://cartoncaps.link/abdfileca80p?referral_code=WZ7HE3S",
                     Status="Pending",
-                    InvitationCode = "WZ7HE3S-01"
+                    ReferralCode = "WZ7HE3S-01"
                 },
             };
 

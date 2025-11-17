@@ -1,7 +1,10 @@
 using CartonCaps.Application.Interfaces.Repositories;
 using CartonCaps.Application.Interfaces.Services;
+using CartonCaps.Application.Interfaces.Validators;
 using CartonCaps.Application.Mappings;
 using CartonCaps.Application.Services;
+using CartonCaps.Application.Validators;
+using CartonCaps.Common.Middleware;
 using CartonCaps.Infrastructure.Data;
 using CartonCaps.Infrastructure.MockData;
 using CartonCaps.Infrastructure.Repositories;
@@ -26,13 +29,30 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 //Repositories
 builder.Services.AddScoped<IReferralRepository, ReferralRepository>();
+builder.Services.AddScoped<IReferralVisitRepository, ReferralVisitRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //Services
 builder.Services.AddScoped<IReferralService, ReferralService>();
+builder.Services.AddScoped<IReferralVisitService, ReferralVisitService>();
+builder.Services.AddScoped<IUserServiceValidator, UserServiceValidator>();
+builder.Services.AddScoped<IReferralServiceValidator, ReferralServiceValidator>();
+builder.Services.AddTransient<IReferralCodeGenerator, ReferralCodeGenerator>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "CartonCaps API",
+        Version = "v1",
+        Description = "API for Carton Caps App responsible for managing the module to refer friends."
+    });
+    c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+});
 
 var app = builder.Build();
 
@@ -51,6 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
 

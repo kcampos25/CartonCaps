@@ -32,7 +32,7 @@ namespace CartonCaps.Infrastructure.Data
 
             //Unique InvitationCode per user
             modelBuilder.Entity<Referral>()
-                .HasIndex(r => new { r.ReferrerUserId, r.InvitationCode })
+                .HasIndex(r => new {r.ReferralCode})
                 .IsUnique();
         }
     }

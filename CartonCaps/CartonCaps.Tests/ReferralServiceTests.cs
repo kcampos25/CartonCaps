@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CartonCaps.Application.DTOs;
 using CartonCaps.Application.Interfaces.Repositories;
+using CartonCaps.Application.Interfaces.Services;
+using CartonCaps.Application.Interfaces.Validators;
 using CartonCaps.Application.Services;
 using CartonCaps.Domain.Entities;
 using Moq;
@@ -10,6 +12,8 @@ namespace CartonCaps.Tests
     public class ReferralServiceTests
     {
         private readonly Mock<IReferralRepository> _repositoryMock;
+        private readonly Mock<IUserServiceValidator> _userServiceValidatorMock;
+        private readonly Mock<IReferralCodeGenerator> _referralCodeGeneratorMock;
         private readonly IMapper _mapper;
         private readonly ReferralService _service;
 
@@ -18,6 +22,8 @@ namespace CartonCaps.Tests
         {
             //Mock repository
             _repositoryMock = new Mock<IReferralRepository>();
+            _userServiceValidatorMock = new Mock<IUserServiceValidator>();
+            _referralCodeGeneratorMock = new Mock<IReferralCodeGenerator>();
 
             //Configure AutoMapper(CartonCapsProfile)
             var config = new MapperConfiguration(cfg =>
@@ -27,7 +33,7 @@ namespace CartonCaps.Tests
             _mapper = config.CreateMapper();
 
             //Create the service mock
-            _service = new ReferralService(_repositoryMock.Object, _mapper);
+            _service = new ReferralService(_repositoryMock.Object, _mapper, _userServiceValidatorMock.Object, _referralCodeGeneratorMock.Object);
         }
 
 
@@ -72,8 +78,12 @@ namespace CartonCaps.Tests
             string baseLink = "https://cartoncaps.link/referral";
             string chars = "ABCDEFG123456";
 
+            _referralCodeGeneratorMock
+                .Setup(g => g.GenerateUniqueReferralCodeAsync(It.IsAny<string>()))
+                .ReturnsAsync("XTHR45A");
+
             _repositoryMock
-                .Setup(r => r.ReferralCodeExistsAsync(It.IsAny<Guid>(), It.IsAny<string>()))
+                .Setup(r => r.ReferralCodeExistsAsync(It.IsAny<string>()))
                 .ReturnsAsync(false);
 
             _repositoryMock

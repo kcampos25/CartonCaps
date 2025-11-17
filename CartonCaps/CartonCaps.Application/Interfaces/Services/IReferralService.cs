@@ -5,6 +5,6 @@ namespace CartonCaps.Application.Interfaces.Services
     public interface IReferralService
     {
         Task<IEnumerable<UserReferralResponse>> GetReferralByUserAsync(Guid referrerUserId);
-        Task<CreateReferralInviteResponse> CreateReferralAsync(CreateReferralInviteRequest request, string baseLink, string referralCodeBase);
+        Task<CreateReferralInviteResponse> CreateReferralAsync(CreateReferralInviteRequest referralInviteRequest, string baseLink, string referralCodeBase);
     }
 }

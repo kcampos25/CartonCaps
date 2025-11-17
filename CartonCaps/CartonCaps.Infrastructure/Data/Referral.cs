@@ -18,7 +18,7 @@
         public string? InviteName { get; set; }
 
         //Referral code generated for each invitation made via Email, SMS or Share
-        public string InvitationCode { get; set; } = null!;
+        public string ReferralCode { get; set; } = null!;
 
         //record creation date
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

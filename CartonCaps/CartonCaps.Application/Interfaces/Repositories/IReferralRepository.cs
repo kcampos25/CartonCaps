@@ -6,6 +6,7 @@ namespace CartonCaps.Application.Interfaces.Repositories
     {
         Task<IEnumerable<UserReferralEntity>> GetReferralByUserAsync(Guid referrerUserId);
         Task CreateReferralAsync(ReferralEntity referralEntity);
-        Task<bool> ReferralCodeExistsAsync(Guid referrerUserId, string referralCode);
+        Task<bool> ReferralCodeExistsAsync(string referralCode);
+        Task<ReferralEntity?> GetReferralByCode(string referralCode);
     }
 }

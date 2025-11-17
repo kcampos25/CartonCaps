@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CartonCaps.Api.Controllers
 {
     /// <summary>
-    /// API that exposes endpoints for the app's referrals module
+    /// API that exposes the endpoints related to the referred users
     /// </summary>
 
     [ApiController]
@@ -16,7 +16,6 @@ namespace CartonCaps.Api.Controllers
         private readonly string _baseReferralLink;
         private readonly string _baseReferralCode;
 
-
         public ReferralsController(IReferralService referralService, IConfiguration configuration)
         {
             _referralService = referralService;
@@ -25,12 +24,12 @@ namespace CartonCaps.Api.Controllers
         }
 
         /// <summary>
-        /// Endpoint responsible for obtaining the people invited by a user (my referrals).
+        /// Endpoint responsible for obtaining a list of users who have been referred by a user(my referrals).
         /// </summary>
         /// <param name="referrerUserId"></param>
         /// <returns>List of a user's referrals(name,status)</returns>
         [HttpGet("{referrerUserId}/referrals")]
-        public async Task<IActionResult> GetReferralByUserAsync(Guid referrerUserId)
+        public async Task<IActionResult> GetReferralByUser(Guid referrerUserId)
         {
             var result = await _referralService.GetReferralByUserAsync(referrerUserId);
 
@@ -44,12 +43,12 @@ namespace CartonCaps.Api.Controllers
         /// Endpoint responsible for generating the invitation link.
         /// It generates the link, saves the referral record, and returns the link.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="referralInviteRequest"></param>
         /// <returns>Object containing the invitation link and referral code</returns>
         [HttpPost("create")]
-        public async Task<IActionResult> CreateReferral([FromBody] CreateReferralInviteRequest request)
+        public async Task<IActionResult> CreateReferral([FromBody] CreateReferralInviteRequest referralInviteRequest)
         {
-            var result = await _referralService.CreateReferralAsync(request, _baseReferralLink, _baseReferralCode);
+            var result = await _referralService.CreateReferralAsync(referralInviteRequest, _baseReferralLink, _baseReferralCode);
             return Ok(result);
         }
     }

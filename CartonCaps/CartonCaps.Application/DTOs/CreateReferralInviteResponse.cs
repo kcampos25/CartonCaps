@@ -7,5 +7,8 @@
 
         //The referral code is sent separately so that the app can use it for other functionality.
         public string ReferralCode { get; set; } = null!;
+
+        //Message with the result of the referral code generation
+        public string? Message { get; set; }
     }
 }
